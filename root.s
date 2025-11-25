@@ -1,14 +1,15 @@
-
 .section .text
 .globl _start
 _start:
-    xor     %rdi, %rdi
-    xor     %rsi, %rsi
-    mov     $-10, %rdx      # -10 = máxima prioridade sem root
-    mov     $140, %rax      # 140 = setpriority (correto!)
+    /* setpriority(PRIO_PROCESS, 0, -10) → syscall 140 */
+    xor     %rdi, %rdi      /* which = 0 */
+    xor     %rsi, %rsi      /* who   = 0 (current process) */
+    mov     $-10, %rdx      /* prio  = -10 */
+    mov     $140, %rax      /* syscall setpriority */
     syscall
 
-    mov     $59, %rax       # execve
+    /* execve("/bin/bash", NULL, NULL) */
+    mov     $59, %rax
     lea     path(%rip), %rdi
     xor     %rsi, %rsi
     xor     %rdx, %rdx
